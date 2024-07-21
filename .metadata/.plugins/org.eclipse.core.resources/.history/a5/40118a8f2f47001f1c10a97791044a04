@@ -1,0 +1,5 @@
+package com.flas.repository;
+
+public interface VehicleDataRepository extends MongoRepository<VehicleData, String>{
+
+}

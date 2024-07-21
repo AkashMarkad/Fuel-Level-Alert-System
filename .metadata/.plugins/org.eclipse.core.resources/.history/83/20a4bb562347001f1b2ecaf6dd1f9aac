@@ -1,0 +1,19 @@
+package com.flas.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.annotation.EnableKafka;
+import org.springframework.kafka.core.ProducerFactory;
+
+import com.flas.model.VehicleData;
+
+@EnableKafka
+@Configuration
+public class kafkaProducerConfig {
+	
+	@Bean
+	public ProducerFactory<String, VehicleData> producerFactory(){
+		Map<>
+	}
+	
+}

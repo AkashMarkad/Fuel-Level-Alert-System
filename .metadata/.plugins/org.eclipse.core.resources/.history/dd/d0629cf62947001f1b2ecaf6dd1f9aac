@@ -1,0 +1,5 @@
+package com.flas.config;
+
+public class KafkaConsumerConfig {
+
+}

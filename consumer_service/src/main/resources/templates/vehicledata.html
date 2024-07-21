@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Vehicle Details</title>
+
+	<!-- Link Favicon -->
+	<link rel="icon" href="/static/img/fueltrack.png" type="image/x-icon">
+	
+	<style>
+		/* font */
+		@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+		* {
+			padding: 0;
+			margin: 0;
+			box-sizing: border-box;
+			text-decoration: none;
+			font-family: 'Poppins', sans-serif;
+		}
+
+		body {
+			margin: 0;
+			padding: 0;
+			background-image: url('/static/img/bg.jpg');
+
+			background-size: cover;
+			background-position: center;
+			background-attachment: fixed;
+		}
+
+		h1 {
+			color: white;
+			text-align: center;
+			font-size: 65px;
+			text-transform: uppercase;
+			line-height: 1;
+			margin-bottom: 30px;
+		}
+
+		h1 span {
+			color: #dd0707;
+			font-size: 80px;
+			font-weight: bold;
+		}
+
+		table {
+			width: 100%;
+			max-width: 1200px;
+			border-collapse: collapse;
+			align-items: center;
+			background-color: transparent;
+			border-radius: 10px;
+			overflow: hidden;
+			margin-left: auto;
+			margin-right: auto;
+
+			background-color: black;
+			border-collapse: collapse;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		}
+
+		th,
+		td {
+			border: 1px solid rgb(255, 255, 255);
+			padding: 8px;
+			text-align: center;
+			background-color: rgba(255, 255, 255, 0.3);
+			color: black;
+		}
+
+		th {
+			background-color: rgba(76, 76, 76, 0.5);
+			color: white;
+		}
+
+		td {
+			background-color: rgba(255, 255, 255, 0.2);
+			color: white;
+		}
+
+		tr:nth-child() td {
+			background-color: rgba(255, 255, 255, 0.2);
+		}
+
+		button {
+			padding: 10px 20px;
+			font-size: 16px;
+			margin: 0 10px;
+			cursor: pointer;
+			border: none;
+			border-radius: 4px;
+			background-color: #dd0707;
+			color: white;
+			transition: background-color 0.3s;
+			border: 2px solid #dd0707;
+			border-radius: 30px;
+			font-weight: bold;
+			text-transform: uppercase;
+		}
+
+		button:hover {
+			background-color: transparent;
+			color: #dd0707;
+		}
+
+		.button-container {
+			width: 100%;
+			display: flex;
+			justify-content: space-between;
+			position: absolute;
+			top: 40px;
+			padding: 0 20px;
+		}
+
+		.alert {
+			right: 10px;
+		}
+
+		.highlight {
+			background-color: rgba(245, 4, 4, 0.941);
+			font-weight: bold;
+			color: white;
+		}
+
+		.btn {
+			margin-top: 10px;
+			margin-bottom: 10px;
+			padding: 10px 20px;
+			background-color: #dd0707;
+			text-transform: uppercase;
+			color: #fff;
+			font-weight: bold;
+			border-radius: 30px;
+			border: 2px solid #dd0707;
+			transition: 0.3s;
+			margin-right: 10px;
+		}
+
+		.btn:hover {
+			background-color: transparent;
+			color: #dd0707;
+		}
+
+		#pagination {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		#pagination button {
+			margin: 0 5px;
+			padding: 5px 10px;
+		}
+
+		#pagination span {
+			color: white;
+			margin: 0 10px;
+		}
+	</style>
+</head>
+
+<body>
+
+	<div class="button-container">
+		<a href="/homepage"><button>Back</button></a>
+		<a href="/alertData"><button class="alert">Alert Data</button></a>
+	</div>
+	<h1>Vehicle <span>Details</span></h1>
+	<div id="data-container">
+		<table>
+			<thead>
+				<tr>
+					<th>VIN</th>
+					<th>Vehicle Speed</th>
+					<th>Engine Speed</th>
+					<th>Brake Status</th>
+
+					<th>Acceleration Status</th>
+					<th>Fuel Level</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="item : ${items}">
+					<td th:text="${item.VIN}"></td>
+					<td th:text="${item.vehicleSpeed}"></td>
+					<td th:text="${item.engineSpeed}"></td>
+					<td th:text="${item.brakeStatus}"></td>
+
+					<td th:text="${item.accelerationStatus}"></td>
+					<td th:classappend="${item.fuelLevel < 5} ? 'highlight' " th:text="${item.fuelLevel}"></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<div id="pagination">
+			<a th:if="${currentPage > 0}" th:href="@{/vehicledata(page=${currentPage - 1})}" class="btn">Previous</a>
+			<span>Page <span th:text="${currentPage + 1}"></span> of <span th:text="${totalPages}"></span></span>
+			<a th:if="${currentPage < totalPages - 1}" th:href="@{/vehicledata(page=${currentPage + 1})}"
+				class="btn">Next</a>
+		</div>
+
+</body>
+
+</html>

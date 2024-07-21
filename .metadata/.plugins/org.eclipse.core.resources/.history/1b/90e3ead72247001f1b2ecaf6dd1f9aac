@@ -1,0 +1,7 @@
+package com.flas.model;
+
+public class VehicleData {
+
+	private String id;
+	private String VIN
+}

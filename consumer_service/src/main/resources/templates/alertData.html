@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Alert Details</title>
+
+	<!-- Link Favicon -->
+	<link rel="icon" href="/static/img/fueltrack.png" type="image/x-icon">
+
+	<style>
+		/* Global Styles */
+		body {
+			font-family: 'Poppins', sans-serif;
+			padding: 0;
+			margin: 0;
+			box-sizing: border-box;
+			text-decoration: none;
+		}
+
+		/* Hero Section Styles */
+		.hero {
+			width: 100%;
+			height: 100vh;
+			/* Ensure the hero section covers the entire viewport height */
+			background: url('/static/img/bg.jpg');
+			background-position: center;
+			background-size: cover;
+			display: flex;
+			background-attachment: fixed;
+			justify-content: flex-start;
+			/* Align items to the top */
+			align-items: center;
+			flex-direction: column;
+			/* Align items vertically */
+			padding: 20px 0;
+			/* Adjust padding to bring content closer to the top */
+			overflow: hidden;
+		}
+
+		.hero .text {
+			width: 90%;
+			margin: 0 auto 10px;
+			/* Centers the content horizontally and adds margin at the bottom */
+			text-align: center;
+			color: #fff;
+			position: relative;
+			/* Allows for easy positioning of child elements */
+		}
+
+		.button-container {
+			width: 90%;
+			margin: 0 auto 10px;
+			display: flex;
+			justify-content: space-between;
+			/* Distributes buttons across the container */
+			position: relative;
+		}
+
+		.hero .text h4 {
+			font-size: 40px;
+			text-transform: uppercase;
+			line-height: 1;
+			margin-bottom: 20px;
+			position: relative;
+			/* Added relative positioning */
+		}
+
+		.hero .text h4 span {
+			color: #dd0707;
+			font-size: 50px;
+			font-weight: bold;
+		}
+
+		.hero .text p {
+			margin-bottom: 20px;
+			color: #fff;
+		}
+
+		.btn {
+			padding: 8px 20px;
+			background-color: #dd0707;
+			text-transform: uppercase;
+			color: #fff;
+			font-weight: bold;
+			border-radius: 30px;
+			border: 2px solid #dd0707;
+			transition: background-color 0.3s, color 0.3s;
+			/* Added color transition */
+			cursor: pointer;
+			text-decoration: none;
+		}
+
+		.btn:hover {
+			background-color: transparent;
+			color: #dd0707;
+		}
+
+		/* Table Styles */
+		table {
+			width: 90%;
+			height: 50vh;
+			margin: 0 auto 10px;
+			/* Centers the table horizontally and adds margin at the bottom */
+			background-color: black;
+			border-radius: 10px;
+			border-collapse: collapse;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+			overflow-y: auto;
+		}
+
+		th,
+		td {
+			border: 1px solid white;
+			padding: 8px;
+			text-align: center;
+		}
+
+		th {
+			background-color: rgba(76, 76, 76, 0.5);
+			color: white;
+		}
+
+		td {
+			background-color: rgba(255, 255, 255, 0.2);
+			color: white;
+		}
+
+		/* General Styles */
+		h1 {
+			color: #333;
+			text-align: center;
+		}
+
+		button {
+			padding: 10px 20px;
+			font-size: 16px;
+			margin: 0 10px;
+			cursor: pointer;
+			border: none;
+			border-radius: 4px;
+			background-color: #dd0707;
+			/* Changes button color to red */
+			color: white;
+			transition: background-color 0.3s, color 0.3s;
+			/* Added color transition */
+			text-decoration: none;
+			display: inline-block;
+		}
+
+		button:hover {
+			background-color: #0056b3;
+			color: white;
+			/* Adjusts text color on hover */
+		}
+
+		#pagination {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		#pagination button {
+			margin: 0 5px;
+			padding: 5px 10px;
+		}
+
+		#pagination span {
+			color: white;
+			margin: 0 10px;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="hero">
+		<div class="text">
+			<div class="button-container">
+				<a href="/vehicledata" class="btn">Vehicle Data</a>
+				<a href="/homepage" class="btn">Back</a>
+			</div>
+			<h4><span>Alert</span> Details</h4>
+			<table>
+				<thead>
+					<tr>
+						<th>Generated Time</th>
+						<th>Alert Message</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- Assuming you're using Thymeleaf for dynamic content -->
+					<tr th:each="item : ${items}">
+						<td th:text="${item.timestamp}"></td>
+						<td th:text="${item.message}"></td>
+						<!-- Add more columns as needed -->
+					</tr>
+				</tbody>
+			</table>
+
+			<div id="pagination">
+				<a th:if="${currentPage > 0}" th:href="@{/alertData(page=${currentPage - 1})}" class="btn">Previous</a>
+				<span>Page <span th:text="${currentPage + 1}"></span> of <span th:text="${totalPages}"></span></span>
+				<a th:if="${currentPage < totalPages - 1}" th:href="@{/alertData(page=${currentPage + 1})}"
+					class="btn">Next</a>
+			</div>
+
+		</div>
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,5 @@
+package com.flas.exception;
+
+public class CustomKafkaException {
+
+}

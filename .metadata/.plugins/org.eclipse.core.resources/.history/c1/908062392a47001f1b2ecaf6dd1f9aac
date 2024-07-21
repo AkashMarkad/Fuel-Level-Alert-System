@@ -1,0 +1,5 @@
+package com.flas.controller;
+
+public class KafkaConsumerController {
+
+}

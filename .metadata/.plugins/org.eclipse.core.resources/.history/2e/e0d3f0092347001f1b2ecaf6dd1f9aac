@@ -1,0 +1,12 @@
+package com.flas.model;
+
+public class VehicleData {
+
+	private String id;
+	private String VIN;
+	private int vehicleSpeed;
+	private int engineSpeed;
+	private boolean brakeStatus;
+	private boolean accelerationStatus;
+	private int fuelLevel;
+}

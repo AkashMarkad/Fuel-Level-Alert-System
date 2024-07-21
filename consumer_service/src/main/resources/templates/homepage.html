@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+ 
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fuel Monitor & Alert Viewer</title>
+ 
+    <!-- Link Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+ 
+    <!-- Link Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+ 
+    <!-- Link Favicon -->
+    <link rel="icon" href="/static/img/fueltrack.png" type="image/x-icon">
+ 
+    <style>
+        /* General Styles */
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            text-decoration: none;
+            font-family: 'Poppins', sans-serif;
+        }
+ 
+        body {
+            text-align: center;
+            overflow-x: hidden;
+        }
+ 
+        /* Hero Section Styles */
+        .hero {
+            width: 100%;
+            height: 100vh;
+            background: url("/static/img/bg.jpg");
+            background-position: center;
+            background-size: cover;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            position: relative;
+        }
+ 
+        .hero .text {
+            width: 50%;
+            text-align: left;
+            padding-left: 50px;
+        }
+ 
+        .hero .text h4 {
+            font-size: 40px;
+            color: #fff;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+ 
+        .hero .text h1 {
+            color: #fff;
+            font-size: 65px;
+            text-transform: uppercase;
+            line-height: 1;
+            margin-bottom: 30px;
+        }
+ 
+        .hero .text h1 span {
+            color: #dd0707;
+            font-size: 80px;
+            font-weight: bold;
+        }
+ 
+        .hero .text p {
+            color: #fff;
+            margin-bottom: 30px;
+        }
+ 
+        .hero .text .btn {
+            padding: 10px 20px;
+            background-color: #dd0707;
+            text-transform: uppercase;
+            color: #fff;
+            font-weight: bold;
+            border-radius: 30px;
+            border: 2px solid #dd0707;
+            transition: 0.3s;
+            margin-right: 10px;
+        }
+ 
+        .hero .text .btn:hover {
+            background-color: transparent;
+            color: #dd0707;
+        }
+ 
+        /* Popup Styles */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: rgba(53, 0, 0, 0.078);
+            border: 2px solid #dd0707;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            color: #fff;
+            text-align: center;
+            border-radius: 10px;
+        }
+ 
+        .popup h1 span {
+            color: #dd0707;
+            font-size: 70px;
+            font-weight: bold;
+        }
+ 
+        .popup h2 {
+            color: #dd0707;
+            font-size: 35px;
+            font-weight: bold;
+        }
+ 
+        .popup h1 {
+            color: #f7f6f6;
+            font-size: 35px;
+            font-weight: bold;
+        }
+ 
+        .popup .close-btn {
+            margin-top: 20px;
+            background-color: #dd0707;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+ 
+        .popup .close-btn:hover {
+            background-color: transparent;
+            color: #dd0707;
+            border: 2px solid #dd0707;
+        }
+ 
+        .popup-bg {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Semi-transparent black */
+            backdrop-filter: blur(5px);
+            /* Applies a blur effect */
+            z-index: 999;
+        }
+        
+        /* Blinking Animation */
+		@keyframes blinking {
+			0% {
+				opacity: 1;
+			}
+ 
+			50% {
+				opacity: 0;
+			}
+ 
+			100% {
+				opacity: 1;
+			}
+		}
+ 
+		.blinking-icon {
+			font-size: 50px;
+			color: #dd0707;
+			animation: blinking 1s infinite;
+		}
+		
+    </style>
+</head>
+ 
+<body>
+    <div class="hero" id="hero">
+        <div class="text">
+            <h4>The Fuel Level Alert App</h4>
+            <h1>Fuel Monitor <br> <span></span></h1>
+            <a href="/vehicledata" class="btn">Vehicle Data</a>
+            <a href="/alertData" class="btn">Alert Data</a>
+        </div>
+ 
+    </div>
+ 
+    <!-- Popup Background -->
+    <div class="popup-bg" id="popup-bg"></div>
+ 
+    <!-- Popup -->
+    <div class="popup" id="popup">
+        <h2>Alert</h2>
+        <h1><i class="fas fa-gas-pump blinking-icon"></i> <br>Fuel Level below <span> 5 %</span><br> Refill Immediately !</h1>
+        <button class="close-btn" id="close-btn">Close</button>
+    </div>
+ 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script type="text/javascript">
+        let heroBg = document.querySelector('#hero');
+ 
+        function switchBackground() {
+            heroBg.style.backgroundImage = "url('/static/img/bg-light.jpg')";
+            setTimeout(() => {
+                heroBg.style.backgroundImage = "url('/static/img/bg.jpg')";
+            }, 800);
+        }
+ 
+        setInterval(switchBackground, 2000);
+ 
+        var stompClient = null;
+ 
+        function connect() {
+            var socket = new SockJS('/wss');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function (frame) {
+                console.log('Connected: ' + frame);
+                stompClient.subscribe('/topic/alerts', function (alert) {
+                    showAlert(JSON.parse(alert.body));
+                });
+            });
+        }
+ 
+        function showAlert(alert) {
+            document.getElementById("popup-bg").style.display = "block";
+            document.getElementById("popup").style.display = "block";
+        }
+ 
+        document.getElementById("close-btn").onclick = function () {
+            document.getElementById("popup-bg").style.display = "none";
+            document.getElementById("popup").style.display = "none";
+        }
+ 
+        window.onload = function () {
+            connect();
+        };
+    </script>
+</body>
+ 
+</html>

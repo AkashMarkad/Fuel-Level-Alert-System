@@ -1,0 +1,5 @@
+package com.flas.model;
+
+public class VehicleData {
+
+}

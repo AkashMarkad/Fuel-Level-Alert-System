@@ -1,0 +1,71 @@
+package com.flas.service;
+
+import java.util.Random;
+
+import org.apache.kafka.common.errors.SerializationException;
+import org.apache.kafka.common.errors.TimeoutException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
+import com.flas.exception.CustomKafkaException;
+import com.flas.model.VehicleData;
+
+@Service
+public class KafkaProducerService {
+	
+	@Autowired
+	private KafkaTemplate<String, VehicleData> kafkaTemplate;
+	
+	Logger logger = LoggerFactory.getLogger(KafkaProducerService.class);
+	
+	//Specified topic here to kafka produce data on that topic
+	private final static String TOPIC = "VehicleData";
+	
+	Random random = new Random();
+	int startVehicleSpeed = 60;
+	int startEngineSpeed = 5000;
+	int startFuelLevel = 20;
+	int value = 0;
+	
+	//Here Vehicle Data is generated for every second using scheduled annotation
+	@Scheduled(fixedRate = 1000)
+	public VehicleData sendMessage() {
+		
+		VehicleData data = new VehicleData();
+		try {
+            data.setVIN("1HGCM82633A123456");
+            data.setVehicleSpeed(startVehicleSpeed + random.nextInt(10));
+            data.setEngineSpeed(startEngineSpeed + random.nextInt(1000));
+            data.setBrakeStatus(random.nextBoolean());
+            data.setAccelerationStatus(random.nextBoolean());
+
+            if (startFuelLevel > 4) startFuelLevel--;
+            else {
+                if (value == 31) {
+                    startFuelLevel = 10;
+                    value = 0;
+                }
+                value++;
+            }
+
+            data.setFuelLevel(startFuelLevel);
+            
+            //Generated vehicle data send on the kafka topic
+            kafkaTemplate.send(TOPIC, data);
+            
+            lo
+
+        } catch (SerializationException | TimeoutException | IllegalStateException e) {
+            throw new CustomKafkaException("Error while sending message to Kafka: " + e.getMessage());
+        } catch (Exception e) {
+            throw new CustomKafkaException("Unexpected error: " + e.getMessage());
+        }
+		
+		return data;
+	}
+	
+}

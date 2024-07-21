@@ -1,0 +1,6 @@
+package com.flas.config;
+
+public class kafkaProducerConfig {
+
+	
+}
